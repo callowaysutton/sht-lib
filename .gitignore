@@ -6,17 +6,50 @@
 *.exe
 *.out
 a.out
+hello
+hello.c
 
-# Test binaries
-test_*
-test-*
-*_test
-*_test.exe
+# Test binaries (keep .c source files)
+/test_self
+/test_self_assertions
+/test_self_runner
+/boost_coverage
+/reach_90_coverage
+/test_coverage_cli
+/test_coverage_demo
+/test_coverage_integration
+/debug
+
+# Test binaries in root directory
+test_arithmetic
+test_comprehensive_coverage
+test_constructor
+test_coverage_basic
+test_coverage_cli
+test_coverage_demo
+test_coverage_display
+test_coverage_integration
+test_coverage_simple
+test_debug
+test_full
+test_macros
+test_manual
+test_manual_self
+test_minimal
+test_minimal_new
+test_new
+test_no_color
+test_only_sht
+test_self_working
+test_simple
+test_simple_coverage
+test_with_failures
 
 # Coverage files
 *.gcda
 *.gcno
 *.gcov
+*.gcov.*
 coverage/
 coverage*.info
 
@@ -27,6 +60,10 @@ bin/
 
 # Example binaries
 example*
+mock_test
+mock_test.o
+cb.o
+empty.o
 
 # Temporary files
 *.tmp

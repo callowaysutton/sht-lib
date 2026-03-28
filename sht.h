@@ -123,6 +123,7 @@ typedef enum {
     SHT_RESULT_PASS,
     SHT_RESULT_FAIL,
     SHT_RESULT_SKIP,
+    SHT_RESULT_XFAIL,
     SHT_RESULT_TIMEOUT
 } sht_result_t;
 
@@ -167,6 +168,7 @@ struct sht_test_t {
     int line;
     char file[SHT_MAX_NAME_LENGTH];
     int enabled;
+    int expected_to_fail;
     sht_test_t* next;
 };
 
@@ -186,6 +188,7 @@ typedef struct {
     char current_message[SHT_MAX_MESSAGE_LENGTH];
     const char* current_file;
     int current_line;
+    sht_test_t* current_test;
     
     void* memory_pool;
     size_t memory_pool_size;
@@ -194,6 +197,7 @@ typedef struct {
     int leak_detection_enabled;
     int verbose_enabled;
     int color_enabled;
+    int xfail_count;
     
 } sht_context_t;
 
@@ -286,7 +290,9 @@ static void sht_set_color(FILE* stream, sht_color_t color) {
             "\033[36m",
             "\033[37m"
         };
-        fprintf(stream, "%s", codes[color]);
+        if (color >= 0 && color < 9 && codes[color]) {
+            fprintf(stream, "%s", codes[color]);
+        }
     #endif
 }
 
@@ -673,10 +679,10 @@ static void sht_assertion_failure(const char* file, int line, const char* messag
 
 #define ASSERT_MEM_EQ(actual, expected, size) \
     do { \
-        const void* a = (const void*)(actual); \
-        const void* e = (const void*)(expected); \
+        const void* _sht_actual_ptr = (const void*)(actual); \
+        const void* _sht_expected_ptr = (const void*)(expected); \
         size_t s = (size_t)(size); \
-        if (SHT_UNLIKELY((a != e) && (!a || !e || memcmp(a, e, s) != 0))) { \
+        if (SHT_UNLIKELY((_sht_actual_ptr != _sht_expected_ptr) && (!_sht_actual_ptr || !_sht_expected_ptr || memcmp(_sht_actual_ptr, _sht_expected_ptr, s) != 0))) { \
             char msg[SHT_MAX_MESSAGE_LENGTH]; \
             sht_snprintf(msg, sizeof(msg), \
                 "Expected blocks of %zu bytes to be equal", s); \
@@ -689,10 +695,10 @@ static void sht_assertion_failure(const char* file, int line, const char* messag
 
 #define ASSERT_MEM_NE(actual, expected, size) \
     do { \
-        const void* a = (const void*)(actual); \
-        const void* e = (const void*)(expected); \
+        const void* _sht_actual_ptr = (const void*)(actual); \
+        const void* _sht_expected_ptr = (const void*)(expected); \
         size_t s = (size_t)(size); \
-        if (SHT_UNLIKELY(a == e || (a && e && memcmp(a, e, s) == 0))) { \
+        if (SHT_UNLIKELY(_sht_actual_ptr == _sht_expected_ptr || (_sht_actual_ptr && _sht_expected_ptr && memcmp(_sht_actual_ptr, _sht_expected_ptr, s) == 0))) { \
             char msg[SHT_MAX_MESSAGE_LENGTH]; \
             sht_snprintf(msg, sizeof(msg), \
                 "Expected blocks of %zu bytes to differ", s); \
@@ -890,10 +896,10 @@ static void sht_assertion_failure(const char* file, int line, const char* messag
 
 #define EXPECT_MEM_EQ(actual, expected, size) \
     do { \
-        const void* a = (const void*)(actual); \
-        const void* e = (const void*)(expected); \
+        const void* _sht_actual_ptr = (const void*)(actual); \
+        const void* _sht_expected_ptr = (const void*)(expected); \
         size_t s = (size_t)(size); \
-        if (SHT_UNLIKELY((a != e) && (!a || !e || memcmp(a, e, s) != 0))) { \
+        if (SHT_UNLIKELY((_sht_actual_ptr != _sht_expected_ptr) && (!_sht_actual_ptr || !_sht_expected_ptr || memcmp(_sht_actual_ptr, _sht_expected_ptr, s) != 0))) { \
             char msg[SHT_MAX_MESSAGE_LENGTH]; \
             sht_snprintf(msg, sizeof(msg), \
                 "Expected blocks of %zu bytes to be equal", s); \
@@ -905,10 +911,10 @@ static void sht_assertion_failure(const char* file, int line, const char* messag
 
 #define EXPECT_MEM_NE(actual, expected, size) \
     do { \
-        const void* a = (const void*)(actual); \
-        const void* e = (const void*)(expected); \
+        const void* _sht_actual_ptr = (const void*)(actual); \
+        const void* _sht_expected_ptr = (const void*)(expected); \
         size_t s = (size_t)(size); \
-        if (SHT_UNLIKELY(a == e || (a && e && memcmp(a, e, s) == 0))) { \
+        if (SHT_UNLIKELY(_sht_actual_ptr == _sht_expected_ptr || (_sht_actual_ptr && _sht_expected_ptr && memcmp(_sht_actual_ptr, _sht_expected_ptr, s) == 0))) { \
             char msg[SHT_MAX_MESSAGE_LENGTH]; \
             sht_snprintf(msg, sizeof(msg), \
                 "Expected blocks of %zu bytes to differ", s); \
@@ -985,6 +991,13 @@ static void sht_assertion_failure(const char* file, int line, const char* messag
         } \
     } while(0)
 
+#define XFAIL() \
+    do { \
+        if (g_sht_context && g_sht_context->current_test) { \
+            g_sht_context->current_test->expected_to_fail = 1; \
+        } \
+    } while(0)
+
 /* ============================================================================
  * COVERAGE MACROS
  * ============================================================================ */
@@ -1050,6 +1063,8 @@ static void sht_run_single_test(sht_test_t* test) {
     test->result = SHT_RESULT_PASS;
     test->message[0] = '\0';
     
+    g_sht_context->current_test = test;
+    
     double start_time = sht_get_time_ms();
     
     g_sht_context->should_jump = 1;
@@ -1085,16 +1100,30 @@ static void sht_run_single_test(sht_test_t* test) {
     }
     
     g_sht_context->should_jump = 0;
+    g_sht_context->current_test = NULL;
     
     test->duration_ms = sht_get_time_ms() - start_time;
     g_sht_context->total_duration_ms += test->duration_ms;
     
-    if (test->result == SHT_RESULT_PASS) {
-        g_sht_context->passed++;
-    } else if (test->result == SHT_RESULT_FAIL) {
-        g_sht_context->failed++;
-    } else if (test->result == SHT_RESULT_SKIP) {
-        g_sht_context->skipped++;
+    if (test->expected_to_fail) {
+        if (test->result == SHT_RESULT_FAIL) {
+            test->result = SHT_RESULT_PASS;
+            g_sht_context->passed++;
+        } else if (test->result == SHT_RESULT_PASS) {
+            test->result = SHT_RESULT_FAIL;
+            sht_snprintf(test->message, sizeof(test->message), "Expected failure but test passed");
+            g_sht_context->failed++;
+        } else {
+            g_sht_context->skipped++;
+        }
+    } else {
+        if (test->result == SHT_RESULT_PASS) {
+            g_sht_context->passed++;
+        } else if (test->result == SHT_RESULT_FAIL) {
+            g_sht_context->failed++;
+        } else if (test->result == SHT_RESULT_SKIP) {
+            g_sht_context->skipped++;
+        }
     }
 }
 
@@ -1310,6 +1339,7 @@ static void sht_print_test_result(sht_test_t* test) {
     
     const char* status_icon = "?";
     sht_color_t status_color = SHT_COLOR_RESET;
+    int use_bold = 0;
     
     switch (test->result) {
         case SHT_RESULT_PASS:
@@ -1319,16 +1349,24 @@ static void sht_print_test_result(sht_test_t* test) {
         case SHT_RESULT_FAIL:
             status_icon = "[FAIL]";
             status_color = SHT_COLOR_RED;
+            use_bold = 1;
             break;
         case SHT_RESULT_SKIP:
             status_icon = "[SKIP]";
             status_color = SHT_COLOR_YELLOW;
+            break;
+        case SHT_RESULT_XFAIL:
+            status_icon = "[XFAIL]";
+            status_color = SHT_COLOR_MAGENTA;
             break;
         default:
             status_icon = "[?]";
             break;
     }
     
+    if (use_bold) {
+        sht_set_color(stdout, SHT_COLOR_BOLD);
+    }
     sht_set_color(stdout, status_color);
     printf("  %s", status_icon);
     sht_reset_color(stdout);
@@ -1345,8 +1383,12 @@ static void sht_print_suite_header(const char* suite_name) {
         return;
     }
     
+    if (!suite_name || suite_name[0] == '\0') {
+        return;
+    }
+    
     sht_set_color(stdout, SHT_COLOR_CYAN);
-    printf("\n%s Suite:\n", suite_name ? suite_name : "Test");
+    printf("\n%s Suite:\n", suite_name);
     sht_reset_color(stdout);
 }
 
@@ -1359,15 +1401,15 @@ static void sht_print_summary(void) {
         sht_enhanced_print_summary_integrations();
     }
     
-    printf("\n");
     sht_set_color(stdout, SHT_COLOR_CYAN);
-    printf("============\n");
+    printf("\n============\n");
     printf("Test Summary\n");
     printf("============\n");
     sht_reset_color(stdout);
     
-    printf("Tests: %d passed, %d failed, %d skipped\n", 
-           g_sht_context->passed, g_sht_context->failed, g_sht_context->skipped);
+    printf("Tests: %d passed, %d failed, %d skipped\n",
+           g_sht_context->passed, g_sht_context->failed,
+           g_sht_context->skipped);
     
     printf("\n");
     

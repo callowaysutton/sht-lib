@@ -155,12 +155,16 @@ TEST(FailureTests, PassTest) {
 }
 
 TEST(FailureTests, NonFatalFailTest) {
+    XFAIL();
+
     EXPECT_EQ(1, 1);
     EXPECT_EQ(2, 3);
     EXPECT_EQ(3, 3);
 }
 
 TEST(FailureTests, FatalFailTest) {
+    XFAIL();
+
     EXPECT_EQ(1, 1);
     ASSERT_EQ(2, 3);
     ASSERT_EQ(3, 3);

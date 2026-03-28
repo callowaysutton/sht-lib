@@ -215,7 +215,8 @@ TEST(NonFatalAssertions, EXPECT_EQ_Passes) {
     EXPECT_EQ(-1, -1);
 }
 
-TEST(NonFatalAssertions, EXPECT_EQ_Fails) { XFAIL();
+TEST(NonFatalAssertions, EXPECT_EQ_Fails) {
+    XFAIL();
     non_fatal_assertion_count++;
     EXPECT_EQ(1, 2);
     non_fatal_assertion_count++;
@@ -228,7 +229,8 @@ TEST(NonFatalAssertions, EXPECT_NE_Passes) {
     EXPECT_NE(0, 1);
 }
 
-TEST(NonFatalAssertions, EXPECT_NE_Fails) { XFAIL();
+TEST(NonFatalAssertions, EXPECT_NE_Fails) {
+    XFAIL();
     non_fatal_assertion_count++;
     EXPECT_NE(42, 42);
     non_fatal_assertion_count++;
@@ -239,7 +241,8 @@ TEST(NonFatalAssertions, EXPECT_LT_Passes) {
     EXPECT_LT(-10, 10);
 }
 
-TEST(NonFatalAssertions, EXPECT_LT_Fails) { XFAIL();
+TEST(NonFatalAssertions, EXPECT_LT_Fails) {
+    XFAIL();
     non_fatal_assertion_count++;
     EXPECT_LT(10, 5);
     non_fatal_assertion_count++;
@@ -250,7 +253,8 @@ TEST(NonFatalAssertions, EXPECT_LE_Passes) {
     EXPECT_LE(0, 1);
 }
 
-TEST(NonFatalAssertions, EXPECT_LE_Fails) { XFAIL();
+TEST(NonFatalAssertions, EXPECT_LE_Fails) {
+    XFAIL();
     non_fatal_assertion_count++;
     EXPECT_LE(10, 5);
     non_fatal_assertion_count++;
@@ -261,7 +265,8 @@ TEST(NonFatalAssertions, EXPECT_GT_Passes) {
     EXPECT_GT(10, -10);
 }
 
-TEST(NonFatalAssertions, EXPECT_GT_Fails) { XFAIL();
+TEST(NonFatalAssertions, EXPECT_GT_Fails) {
+    XFAIL();
     non_fatal_assertion_count++;
     EXPECT_GT(5, 10);
     non_fatal_assertion_count++;
@@ -272,7 +277,8 @@ TEST(NonFatalAssertions, EXPECT_GE_Passes) {
     EXPECT_GE(10, 5);
 }
 
-TEST(NonFatalAssertions, EXPECT_GE_Fails) { XFAIL();
+TEST(NonFatalAssertions, EXPECT_GE_Fails) {
+    XFAIL();
     non_fatal_assertion_count++;
     EXPECT_GE(5, 10);
     non_fatal_assertion_count++;
@@ -282,7 +288,8 @@ TEST(NonFatalAssertions, EXPECT_NULL_Passes) {
     EXPECT_NULL(NULL);
 }
 
-TEST(NonFatalAssertions, EXPECT_NULL_Fails) { XFAIL();
+TEST(NonFatalAssertions, EXPECT_NULL_Fails) {
+    XFAIL();
     non_fatal_assertion_count++;
     int x = 42;
     EXPECT_NULL(&x);
@@ -294,7 +301,8 @@ TEST(NonFatalAssertions, EXPECT_NOT_NULL_Passes) {
     EXPECT_NOT_NULL(&x);
 }
 
-TEST(NonFatalAssertions, EXPECT_NOT_NULL_Fails) { XFAIL();
+TEST(NonFatalAssertions, EXPECT_NOT_NULL_Fails) {
+    XFAIL();
     non_fatal_assertion_count++;
     EXPECT_NOT_NULL(NULL);
     non_fatal_assertion_count++;
@@ -306,7 +314,8 @@ TEST(NonFatalAssertions, EXPECT_STR_EQ_Passes) {
     EXPECT_STR_EQ(NULL, NULL);
 }
 
-TEST(NonFatalAssertions, EXPECT_STR_EQ_Fails) { XFAIL();
+TEST(NonFatalAssertions, EXPECT_STR_EQ_Fails) {
+    XFAIL();
     non_fatal_assertion_count++;
     EXPECT_STR_EQ("hello", "world");
     non_fatal_assertion_count++;
@@ -317,7 +326,8 @@ TEST(NonFatalAssertions, EXPECT_STR_NE_Passes) {
     EXPECT_STR_NE("a", "b");
 }
 
-TEST(NonFatalAssertions, EXPECT_STR_NE_Fails) { XFAIL();
+TEST(NonFatalAssertions, EXPECT_STR_NE_Fails) {
+    XFAIL();
     non_fatal_assertion_count++;
     EXPECT_STR_NE("hello", "hello");
     non_fatal_assertion_count++;
@@ -328,7 +338,8 @@ TEST(NonFatalAssertions, EXPECT_FLOAT_EQ_Passes) {
     EXPECT_FLOAT_EQ(0.0, 0.0);
 }
 
-TEST(NonFatalAssertions, EXPECT_FLOAT_EQ_Fails) { XFAIL();
+TEST(NonFatalAssertions, EXPECT_FLOAT_EQ_Fails) {
+    XFAIL();
     non_fatal_assertion_count++;
     EXPECT_FLOAT_EQ(1.0, 2.0);
     non_fatal_assertion_count++;
@@ -338,7 +349,8 @@ TEST(NonFatalAssertions, EXPECT_FLOAT_NEAR_Passes) {
     EXPECT_FLOAT_NEAR(1.0, 1.0001, 0.001);
 }
 
-TEST(NonFatalAssertions, EXPECT_FLOAT_NEAR_Fails) { XFAIL();
+TEST(NonFatalAssertions, EXPECT_FLOAT_NEAR_Fails) {
+    XFAIL();
     non_fatal_assertion_count++;
     EXPECT_FLOAT_NEAR(1.0, 2.0, 0.001);
     non_fatal_assertion_count++;
@@ -350,7 +362,8 @@ TEST(NonFatalAssertions, EXPECT_MEM_EQ_Passes) {
     EXPECT_MEM_EQ(a, b, sizeof(a));
 }
 
-TEST(NonFatalAssertions, EXPECT_MEM_EQ_Fails) { XFAIL();
+TEST(NonFatalAssertions, EXPECT_MEM_EQ_Fails) {
+    XFAIL();
     non_fatal_assertion_count++;
     int a[] = {1, 2, 3};
     int b[] = {1, 2, 4};
@@ -364,7 +377,8 @@ TEST(NonFatalAssertions, EXPECT_MEM_NE_Passes) {
     EXPECT_MEM_NE(a, b, sizeof(a));
 }
 
-TEST(NonFatalAssertions, EXPECT_MEM_NE_Fails) { XFAIL();
+TEST(NonFatalAssertions, EXPECT_MEM_NE_Fails) {
+    XFAIL();
     non_fatal_assertion_count++;
     int a[] = {1, 2, 3};
     int b[] = {1, 2, 3};
@@ -409,7 +423,8 @@ TEST(EdgeCases, FloatBoundaries) {
     EXPECT_FLOAT_EQ(1.0e-10, 1.0e-10);
 }
 
-TEST(EdgeCases, ZeroSizeMemory) { XFAIL();
+TEST(EdgeCases, ZeroSizeMemory) {
+    XFAIL();
     int x = 42;
     ASSERT_MEM_EQ(&x, &x, 0);
     ASSERT_MEM_NE(&x, &x, 0);
@@ -459,25 +474,29 @@ TEST(EdgeCases, LongStrings) {
     EXPECT_STR_NE(long1, long3);
 }
 
-TEST(ErrorMessages, MessageFormatCorrectness) { XFAIL();
+TEST(ErrorMessages, MessageFormatCorrectness) {
+    XFAIL();
     int x = 5;
     int y = 10;
     
     ASSERT_EQ(x, y);
 }
 
-TEST(ErrorMessages, FloatMessageFormat) { XFAIL();
+TEST(ErrorMessages, FloatMessageFormat) {
+    XFAIL();
     double a = 1.23456789;
     double b = 9.87654321;
     
     ASSERT_FLOAT_NEAR(a, b, 0.0001);
 }
 
-TEST(ErrorMessages, StringMessageFormat) { XFAIL();
+TEST(ErrorMessages, StringMessageFormat) {
+    XFAIL();
     ASSERT_STR_EQ("expected this", "but got that");
 }
 
-TEST(AssertionDifferences, NonFatalContinuesAfterFailure) { XFAIL();
+TEST(AssertionDifferences, NonFatalContinuesAfterFailure) {
+    XFAIL();
     non_fatal_assertion_count++;
     EXPECT_EQ(1, 2);
     non_fatal_assertion_count++;
@@ -487,7 +506,8 @@ TEST(AssertionDifferences, NonFatalContinuesAfterFailure) { XFAIL();
     non_fatal_assertion_count++;
 }
 
-TEST(AssertionDifferences, FatalStopsAtFirstFailure) { XFAIL();
+TEST(AssertionDifferences, FatalStopsAtFirstFailure) {
+    XFAIL();
     ASSERT_EQ(1, 2);
     ASSERT_EQ(3, 4);
     ASSERT_EQ(5, 5);

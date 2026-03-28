@@ -1,0 +1,56 @@
+# Build artifacts
+*.o
+*.a
+*.so
+*.dylib
+*.exe
+*.out
+a.out
+
+# Test binaries
+test_*
+test-*
+*_test
+*_test.exe
+
+# Coverage files
+*.gcda
+*.gcno
+*.gcov
+coverage/
+coverage*.info
+
+# Build directories
+build/
+obj/
+bin/
+
+# Example binaries
+example*
+
+# Temporary files
+*.tmp
+*.temp
+output.txt
+*.log
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Debug files
+debug
+debug.txt
+
+# Test runner outputs
+*.out.txt
+
+# Coverage reports HTML
+coverage/html/

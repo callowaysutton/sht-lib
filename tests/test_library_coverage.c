@@ -74,6 +74,12 @@ TEST(BoostCoverage, FormatPtr) {
     sht_format_ptr(buffer, sizeof(buffer), ptr);
 }
 
+TEST(BoostCoverage, CoverageInit) {
+    g_sht_coverage_enabled = 1;
+    sht_coverage_init_func();
+    g_sht_coverage_enabled = 0;
+}
+
 TEST(BoostCoverage, CoverageLine) {
     g_sht_coverage_enabled = 1;
     sht_record_line_func(__FILE__, __LINE__);

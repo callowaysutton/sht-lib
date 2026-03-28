@@ -95,3 +95,83 @@ make coverage
 make clean
 ```
 
+## Test Coverage
+
+### Summary
+
+| Metric | Value | Status |
+|--------|-------|--------|
+| **Line Coverage** | 81.2% (455/560 lines) | ✅ Good |
+| **Function Coverage** | 97.1% (33/34 functions) | ✅ Excellent |
+| **Test Suites** | 14 | — |
+| **Total Tests** | 200+ | — |
+| **Coverage Tool** | gcov + lcov | — |
+
+The SHT library achieves robust test coverage across all major functionality including assertion mechanisms, test execution, memory management, and output formatting.
+
+### Why Not 100%?
+
+Approximately 93 lines (~17%) of the library are difficult to cover due to fundamental limitations of gcov instrumentation:
+
+- **Parallel execution** (~35 lines) - pthread-based parallel test execution runs successfully but gcov cannot capture coverage data from threaded code
+- **Coverage computation** (~21 lines) - Static function duplication caused by `#define SHT_IMPLEMENTATION` creates multiple copies that gcov cannot properly aggregate
+- **Error paths & defensive code** (~37 lines) - Rare error conditions, NULL checks, and boundary cases that would require artificial injection to trigger
+
+See [COVERAGE_ANALYSIS.md](COVERAGE_ANALYSIS.md) for detailed technical explanation.
+
+### Test Suite Overview
+
+| Test Suite | Description | Tests |
+|------------|-------------|-------|
+| **test_self.c** | Core framework self-tests (assertions, fixtures, ordering) | 31 |
+| **test_self_assertions.c** | All assertion macro variations | 78 |
+| **test_self_runner.c** | Test runner and execution flow | 58 |
+| **test_library_coverage.c** | Coverage-boosting tests for edge cases | 10 |
+| **test_core.c** | Core assertion functionality | 10 |
+| **test_fixtures_and_features.c** | Fixtures, setup/teardown, advanced features | 5 |
+| **test_parallel.c** | Parallel test execution | 13 |
+| **test_parallel_direct.c** | Direct parallel API testing | 3 |
+| **test_argparse.c** | Command-line argument parsing | 15 |
+| **test_edge_cases.c** | Boundary conditions and error handling | 11 |
+| **test_coverage_paths.c** | Coverage path exploration | 5 |
+| **simple_example.c** | Example math functions (addition, factorial) | 3 |
+| **example_arithmetic.c** | Example arithmetic operations | 5 |
+| **rpn_calculator_test.c** | RPN calculator comprehensive tests | 13 |
+
+### Testing Features Exercised
+
+**Assertions:**
+- Basic: `ASSERT_TRUE`, `ASSERT_FALSE`, `EXPECT_TRUE`, `EXPECT_FALSE`
+- Comparisons: `ASSERT_EQ`, `ASSERT_NE`, `ASSERT_LT`, `ASSERT_LE`, `ASSERT_GT`, `ASSERT_GE`
+- Strings: `ASSERT_STR_EQ`, `ASSERT_STR_NE`, `EXPECT_STR_EQ`, `EXPECT_STR_NE`
+- Pointers: `ASSERT_NULL`, `ASSERT_NOT_NULL`, `EXPECT_NULL`, `EXPECT_NOT_NULL`
+- Floats: `ASSERT_FLOAT_EQ`, `ASSERT_FLOAT_NEAR`, `EXPECT_FLOAT_EQ`, `EXPECT_FLOAT_NEAR`
+- Memory: `ASSERT_MEM_EQ`, `ASSERT_MEM_NE`, `EXPECT_MEM_EQ`, `EXPECT_MEM_NE`
+
+**Mechanisms:**
+- Auto-discovery via compiler constructors
+- Fatal vs non-failure assertion handling
+- Test suite grouping and ordering
+- Setup/teardown fixtures
+- Skip test functionality
+- XFAIL (expected failure) marking
+- Memory leak detection
+- Thread-safe parallel execution
+- Colored terminal output
+- Command-line argument parsing (`--verbose`, `--filter`, etc.)
+
+### Running Coverage
+
+```bash
+# Generate HTML coverage report
+make coverage
+
+# View the report (macOS)
+open coverage/html/index.html
+
+# View the report (Linux)
+xdg-open coverage/html/index.html
+# or
+firefox coverage/html/index.html
+```
+

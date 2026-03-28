@@ -16,28 +16,70 @@ A modern, pytest-inspired testing framework for C.
 
 ## Quick Start
 
+Here's a complete, runnable example showing both your functional code and the test code:
+
 ```c
+/* my_math.c */
+int add(int a, int b) {
+    return a + b;
+}
+
+int multiply(int a, int b) {
+    return a * b;
+}
+```
+
+```c
+/* test_my_math.c */
 #define SHT_IMPLEMENTATION
 #include "sht.h"
 
-TEST(Math, addition_basic) {
-    EXPECT_EQ(2 + 2, 4);
-    EXPECT_EQ(-5 + 3, -2);
+int add(int a, int b);
+int multiply(int a, int b);
+
+TEST(Math, addition_works) {
+    EXPECT_EQ(add(2, 3), 5);
+    EXPECT_EQ(add(0, 0), 0);
+    EXPECT_EQ(add(-1, 1), 0);
 }
 
-TEST(Math, division_by_zero) {
-    EXPECT_TRUE(1 == 1);
+TEST(Math, multiplication_works) {
+    EXPECT_EQ(multiply(2, 3), 6);
+    EXPECT_EQ(multiply(0, 5), 0);
+    EXPECT_EQ(multiply(-2, 3), -6);
 }
 
-int main(int argc, char** argv) {
-    return RUN_ALL_TESTS(argc, argv);
-}
+TEST_RUN_MAIN()
 ```
 
 Compile and run:
 ```bash
-gcc -o my_test my_test.c
-./my_test
+gcc -o test_my_math test_my_math.c my_math.c
+./test_my_math
+```
+
+Output:
+```
+======================================================
+  SHT - Simple Header-only Testing Framework
+======================================================
+  Running 2 test(s)...
+
+Math Suite:
+  [PASS] addition_works                                   (0.001 ms)
+  [PASS] multiplication_works                             (0.000 ms)
+
+============
+Test Summary
+============
+Tests: 2 passed, 0 failed, 0 skipped
+
+  Total: 2
+  Assertions:   0/6 (failed/total)
+  Time:         0.002 ms
+  Leaks:        No memory leaks detected
+
+SUCCESS!
 ```
 
 ## Build System
@@ -53,11 +95,3 @@ make coverage
 make clean
 ```
 
-## Documentation
-
-- PROJECT_SUMMARY.md - Project overview and goals
-- AGENT_MESSAGING_GUIDE.md - Development workflow
-
-## License
-
-MIT License

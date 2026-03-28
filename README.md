@@ -117,8 +117,6 @@ Approximately 93 lines (~17%) of the library are difficult to cover due to funda
 - **Coverage computation** (~21 lines) - Static function duplication caused by `#define SHT_IMPLEMENTATION` creates multiple copies that gcov cannot properly aggregate
 - **Error paths & defensive code** (~37 lines) - Rare error conditions, NULL checks, and boundary cases that would require artificial injection to trigger
 
-See [COVERAGE_ANALYSIS.md](COVERAGE_ANALYSIS.md) for detailed technical explanation.
-
 ### Test Suite Overview
 
 | Test Suite | Description | Tests |

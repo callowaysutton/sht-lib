@@ -101,13 +101,13 @@ make clean
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| **Line Coverage** | 81.2% (455/560 lines) | ✅ Good |
-| **Function Coverage** | 97.1% (33/34 functions) | ✅ Excellent |
+| **Line Coverage** | 80.6% (468/581 lines) | ✅ Good |
+| **Function Coverage** | 100.0% (36/36 functions) | ✅ Excellent |
 | **Test Suites** | 14 | — |
 | **Total Tests** | 200+ | — |
 | **Coverage Tool** | gcov + lcov | — |
 
-The SHT library achieves robust test coverage across all major functionality including assertion mechanisms, test execution, memory management, and output formatting.
+The SHT library achieves robust test coverage across all major functionality including assertion mechanisms, test execution, memory management, and output formatting. All functions are covered.
 
 ### Why Not 100%?
 
@@ -308,7 +308,7 @@ Assertions: 2/1183 (failed/total)
 ✓ Completed
 
     ▶ test_library_coverage_cov
-Test Summary: 10 passed, 0 failed, 0 skipped
+Test Summary: 11 passed, 0 failed, 0 skipped
 Assertions: 0/23 (failed/total)
 ✓ Completed
 
@@ -375,8 +375,8 @@ Examples:
     📝 Generating HTML report...
 
   📊 SHT Library Coverage (sht.h only)
-      lines.......: 81.2% (455 of 560 lines)
-      functions...: 97.1% (33 of 34 functions)
+      lines.......: 80.6% (468 of 581 lines)
+      functions...: 100.0% (36 of 36 functions)
 
   📁 View: open coverage/html/index.html
 ```

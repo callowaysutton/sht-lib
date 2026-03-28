@@ -24,10 +24,10 @@ $(BUILD_DIR)/test_self_assertions: $(TEST_DIR)/test_self_assertions.c | $(BUILD_
 $(BUILD_DIR)/test_self_runner: $(TEST_DIR)/test_self_runner.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
 
-$(BUILD_DIR)/boost_coverage: $(TEST_DIR)/boost_coverage.c | $(BUILD_DIR)
+$(BUILD_DIR)/boost_coverage: $(TEST_DIR)/test_boost_coverage.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
 
-$(BUILD_DIR)/reach_90_coverage: $(TEST_DIR)/reach_90_coverage.c | $(BUILD_DIR)
+$(BUILD_DIR)/reach_90_coverage: $(TEST_DIR)/test_boost_coverage.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
 
 # Build all self-tests

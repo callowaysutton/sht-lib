@@ -227,7 +227,14 @@ typedef struct {
  * GLOBAL STATE
  * ============================================================================ */
 
-static sht_context_t* g_sht_context = NULL;
+static sht_context_t g_sht_context_storage = {0};
+
+static sht_context_t* g_sht_context = &g_sht_context_storage;
+
+static int g_sht_initialized = 0;
+static sht_test_t* g_constructor_tests = NULL;
+static sht_test_t* g_constructor_tests_tail = NULL;
+
 static int g_sht_coverage_enabled = 0;
 static int g_sht_parallel_enabled = 0;
 static int g_sht_num_workers = 1;
@@ -384,7 +391,9 @@ static void sht_register_test(sht_test_t* test) {
     if (!g_sht_context || !test) {
         return;
     }
-    
+
+    test->next = NULL;
+
     if (!g_sht_context->tests) {
         g_sht_context->tests = test;
         g_sht_context->last_test = test;
@@ -392,7 +401,7 @@ static void sht_register_test(sht_test_t* test) {
         g_sht_context->last_test->next = test;
         g_sht_context->last_test = test;
     }
-    
+
     g_sht_context->test_count++;
 }
 
@@ -1463,15 +1472,20 @@ static int sht_run_all_tests(void) {
 }
 
 static int sht_init_context(void) {
-    g_sht_context = (sht_context_t*)calloc(1, sizeof(sht_context_t));
-    if (!g_sht_context) {
-        fprintf(stderr, "SHT: Failed to allocate context\n");
-        return -1;
+    if (g_sht_initialized) {
+        return 0;
     }
-    
-    g_sht_context->tests = NULL;
-    g_sht_context->last_test = NULL;
-    g_sht_context->test_count = 0;
+
+    sht_test_t* saved_tests = g_sht_context->tests;
+    sht_test_t* saved_last = g_sht_context->last_test;
+    int saved_count = g_sht_context->test_count;
+
+    memset(g_sht_context, 0, sizeof(sht_context_t));
+
+    g_sht_context->tests = saved_tests;
+    g_sht_context->last_test = saved_last;
+    g_sht_context->test_count = saved_count;
+
     g_sht_context->passed = 0;
     g_sht_context->failed = 0;
     g_sht_context->skipped = 0;
@@ -1481,13 +1495,15 @@ static int sht_init_context(void) {
     g_sht_context->should_jump = 0;
     g_sht_context->verbose_enabled = 0;
     g_sht_context->color_enabled = 1;
-    
+
     g_sht_context->current_message[0] = '\0';
     g_sht_context->current_file = NULL;
     g_sht_context->current_line = 0;
-    
+
+    g_sht_initialized = 1;
+
     sht_init_memory_pool();
-    
+
     return 0;
 }
 
@@ -1502,10 +1518,11 @@ static void sht_cleanup_context(void) {
         sht_destroy_test(test);
         test = next;
     }
-    
+
     sht_cleanup_memory_pool();
-    
-    free(g_sht_context);
+
+    memset(g_sht_context, 0, sizeof(sht_context_t));
+    g_sht_initialized = 0;
     g_sht_context = NULL;
 }
 

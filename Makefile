@@ -42,7 +42,8 @@ COVERAGE_TESTS = $(BUILD_DIR)/test_self_cov $(BUILD_DIR)/test_self_assertions_co
                    $(BUILD_DIR)/test_parallel_cov $(BUILD_DIR)/test_argparse_cov \
                    $(BUILD_DIR)/test_edge_cases_cov \
                    $(BUILD_DIR)/test_core_cov $(BUILD_DIR)/test_fixtures_and_features_cov \
-                   $(BUILD_DIR)/test_parallel_direct_cov
+                   $(BUILD_DIR)/test_parallel_direct_cov \
+                   $(BUILD_DIR)/test_sht_util_cov
 
 $(BUILD_DIR)/test_self_cov: $(TEST_DIR)/test_self.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) $(COVERAGE_FLAGS) -o $@ $< $(LDFLAGS)
@@ -72,6 +73,9 @@ $(BUILD_DIR)/test_fixtures_and_features_cov: $(TEST_DIR)/test_fixtures_and_featu
 	$(CC) $(CFLAGS) $(COVERAGE_FLAGS) -o $@ $< $(LDFLAGS)
 
 $(BUILD_DIR)/test_parallel_direct_cov: $(TEST_DIR)/test_parallel_direct.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) $(COVERAGE_FLAGS) -o $@ $< $(LDFLAGS)
+
+$(BUILD_DIR)/test_sht_util_cov: $(TEST_DIR)/test_sht_util.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) $(COVERAGE_FLAGS) -o $@ $< $(LDFLAGS)
 
 

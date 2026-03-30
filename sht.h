@@ -1613,12 +1613,6 @@ static int sht_parse_arguments(int argc, char* argv[]) {
     return 0;
 }
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* SHT_H */
-
 /* ============================================================================
  * BACKWARD COMPATIBILITY MACROS
  * ============================================================================ */
@@ -1781,3 +1775,9 @@ static void sht_enhanced_print_summary_integrations(void) {
 #define SHT_REGISTER_TEST(name, suite)
 #define SHT_RUN(argc, argv) TEST_RUN_MAIN()
 #define SHT_FAIL(msg) do { printf("FAIL: %s\n", msg); return; } while(0)
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* SHT_H */

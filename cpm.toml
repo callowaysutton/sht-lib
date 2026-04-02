@@ -1,0 +1,10 @@
+# CPM Project
+# Auto-generated
+name = "sht"
+version = "0.1.0"
+description = "Simple Header Testing Library"
+
+[build]
+include = ["include/"]
+flags = []
+libdir = "lib/"
